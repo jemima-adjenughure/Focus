@@ -1,0 +1,3 @@
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/cmake-build-debug/CMakeFiles/Focus.dir

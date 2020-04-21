@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/game.h
+stack.h
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/stack.h
+
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/main.c
+stdio.h
+-
+game.h
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/game.h
+
+/Users/jemimaadjenughure/Desktop/SOFTWARE ENGINEERING PROJECT FOCUS/stack.h
+stdio.h
+-
+stdlib.h
+-
+
