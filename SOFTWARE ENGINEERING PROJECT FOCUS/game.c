@@ -2,9 +2,7 @@
 // Created by Jemima Adjenughure on 08/04/2020.
 //
 
-#include <stdio.h>
 #include"game.h"
-
 
 // this function creates player with the specified color
 Player createPlayer(Piece color)
@@ -26,7 +24,7 @@ Board createBoard()
     // in the inital state of the board
     for (int i = 0; i < BOARDSIZE; i++) {
         for (int j = 0; j < BOARDSIZE; j++) {
-            if (i == 0 || i == BOARDSIZE-1 || j == 0 || j == BOARDSIZE-1) {
+            if (i == 0 || i == BOARDSIZE - 1 || j == 0 || j == BOARDSIZE - 1) {
                 // should be an empty stack
                 (temp).board[i][j] = createStack();
             }
@@ -44,50 +42,96 @@ Board createBoard()
 // this function returns 0 if i,j is {(0,0), (0,1), (1,0), (0,5), (0,6), (1,6), (5,0), (6,0), (6,1), (5,6), (6,5), (6,6)}
 int validStack(int i, int j)
 {
-    if (i + j <= 1 || (i==0 && j>=BOARDSIZE-2) || (j==BOARDSIZE-1 && i <=1)
-        || (j==0 && i>=BOARDSIZE-2) || (i==BOARDSIZE-1 && j<=1) || (i==BOARDSIZE-1 && j>=BOARDSIZE-2)
-        || (j==BOARDSIZE-1 && i>=BOARDSIZE-2))
+    if (i < 0 || i >= BOARDSIZE || j<0 || j>BOARDSIZE) {
+        return 0;
+    }
+    if (i + j <= 1 || (i == 0 && j >= BOARDSIZE - 2) || (j == BOARDSIZE - 1 && i <= 1)
+        || (j == 0 && i >= BOARDSIZE - 2) || (i == BOARDSIZE - 1 && j <= 1) || (i == BOARDSIZE - 1 && j >= BOARDSIZE - 2)
+        || (j == BOARDSIZE - 1 && i >= BOARDSIZE - 2))
         return 0;
     return 1;
 }
 
 // this function print board with (- denoting invalid place, O empty space, B blue piece, Y yellow piece)
-void printBoard(Board *b)
+void printBoard(Board* b)
 {
-    printf("   ");
+    printf("\t\t   ");
     // the header
     for (int i = 0; i < BOARDSIZE; i++)
     {
-        printf("%d  ",i);
+        printf("   %d  ", i);
     }
     printf("\n");
 
 
     for (int i = 0; i < BOARDSIZE; i++) {
         // row number
-        printf("%d  ", i);
+        //printf("%d  ", i);
+        for (int k = 1; k <= 3; k++) {
+            printf("\t\t");
+            if(k==2)
+                printf("%d  ", i);
+            else
+                printf("   ");
 
-        for (int j = 0; j < BOARDSIZE; j++) {
-            // the not valid slots => -
-            // the empty slots => O
-            // the slots with pieces => B or Y according to the piece on the top
+            for (int j = 0; j < BOARDSIZE; j++) {
+                // the not valid slots => -
+                // the empty slots => O
+                // the slots with pieces => B or Y according to the piece on the top
+                if (k != 2) {
+                    if (!validStack(i, j)) {
+                        if (!validStack(i, j - 1)) {
+                            printf("      ");
+                        }
+                        else {
+                            printf("|     ");
+                        }
+                    }
+                    else
+                        printf("|     ");
 
-            if (!validStack(i, j)) {
-                printf("-  ");
+                }
+                else {
+                    if (!validStack(i, j)) {
+                        if (!validStack(i, j - 1))
+                            printf("      ");
+                        else
+                            printf("|     ");
+
+                    }
+                    else if ((*b).board[i][j].size == 0) {
+                        printf("|     ");
+                    }
+                    else {
+                        //printf("%c  ", (peak(&(*b).board[i][j]) == BLUE) ? 'B' : 'Y');
+                        char* arr = getFirst5(&(*b).board[i][j]);
+                        printf("|%5s", arr);
+                    }
+                }
             }
-            else if ((*b).board[i][j].size == 0) {
-                printf("O  ");
+            if (validStack(i, BOARDSIZE - 1)) {
+                printf("|");
+            }
+            printf("\n");
+        }
+        // print bottom boarders
+        printf("\t\t");
+        printf("   ");
+        for (int j = 0; j < BOARDSIZE; j++) {
+            if (validStack(i, j)|| validStack(i+1,j) ) {
+                printf("______");
             }
             else {
-                printf("%c  ", (peak(&(*b).board[i][j]) == BLUE) ? 'B' : 'Y');
+                printf("      ");
             }
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 //return 1 if the game didn't end yet.
-int isEnd(Board* b,Player p[])
+int isEnd(Board* b, Player p[])
 {
     int currentColor = -1;
     for (int i = 0; i < BOARDSIZE; i++) {
@@ -116,7 +160,7 @@ int isEnd(Board* b,Player p[])
         return 0;
     }
 
-    return currentColor+1;
+    return currentColor + 1;
 }
 
 // Function responsible for performing the move action from oldI, oldJ to newI ,newJ.
@@ -124,11 +168,11 @@ int isEnd(Board* b,Player p[])
 int playerMove(Player* p, Board* b, int oldI, int oldJ, int newI, int newJ)
 {
     if (!validStack(oldI, oldJ) || !validStack(newI, newJ)) {
-        printf("One of these points is not valid.\n");
+        printf("\t\t\t\tOne of these points is not valid.\n");
         return 0;
     }
     if (peak(&b->board[oldI][oldJ]) != p->playerColor) {
-        printf("You don't own this piece.\n");
+        printf("\t\t\t\tYou don't own this piece.\n");
         return 0;
     }
 
@@ -137,7 +181,7 @@ int playerMove(Player* p, Board* b, int oldI, int oldJ, int newI, int newJ)
 
     // check if this distance is applicable with the current start point(size of the stack at it).
     if (distance != b->board[oldI][oldJ].size) {
-        printf("You can only travel %d moves.\n",b->board[oldI][oldJ].size);
+        printf("\t\t\t\tYou can only travel %d moves.\n", b->board[oldI][oldJ].size);
         return 0;
     }
 
@@ -149,7 +193,7 @@ int playerMove(Player* p, Board* b, int oldI, int oldJ, int newI, int newJ)
     }
 
     // check the stack if larger than 5
-    checkStack(p,b,newI,newJ);
+    checkStack(p, b, newI, newJ);
     return 1;
 }
 
@@ -158,16 +202,16 @@ int playerMove(Player* p, Board* b, int oldI, int oldJ, int newI, int newJ)
 int playerPlace(Player* p, Board* b, int i, int j)
 {
     if (!validStack(i, j)) {
-        printf("This point is not valid.\n");
+        printf("\t\t\t\tThis point is not valid.\n");
         return 0;
     }
     if (p->reservedCount <= 0) {
-        printf("You don't have reserved pieces to place\n");
+        printf("\t\t\t\tYou don't have reserved pieces to place\n");
         return 0;
     }
     push(&b->board[i][j], p->playerColor);
     p->reservedCount--;
-    checkStack(p,b,i, j);
+    checkStack(p, b, i, j);
     return 1;
 }
 
@@ -215,7 +259,7 @@ void doPlaceAction(Board* b, Player* p)
     int x, y;
     int res;
     do {
-        printf("Please enter the coordinates(x y):");
+        printf("\t\t\t\tPlease enter the coordinates(x y):");
         scanf("%d %d", &x, &y);
         res = playerPlace(p, b, x, y);
     } while (!res);
@@ -230,21 +274,21 @@ void doMoveAction(Board* b, Player* p)
     // get the starting point
     do {
         res = 1;
-        printf("Please enter the source coordinates(x y): ");
+        printf("\t\t\t\tPlease enter the source coordinates(x y): ");
         scanf("%d %d", &x, &y);
         if (!validStack(x, y)) {
             res = 0;
-            printf("This point is not valid.\n");
+            printf("\t\t\t\tThis point is not valid.\n");
             continue;
         }
         if (b->board[x][y].size <= 0) {
             res = 0;
-            printf("This point is not valid.\n");
+            printf("\t\t\t\tThis point is not valid.\n");
             continue;
         }
         if (peak(&b->board[x][y]) != p->playerColor) {
             res = 0;
-            printf("You don't own this piece.\n");
+            printf("\t\t\t\tYou don't own this piece.\n");
         }
     } while (!res);
 
@@ -253,11 +297,11 @@ void doMoveAction(Board* b, Player* p)
     int i, j;
     do {
         res = 1;
-        printf("Please enter the destination coordinates(x y): ");
+        printf("\t\t\t\tPlease enter the destination coordinates(x y): ");
         scanf("%d %d", &i, &j);
         if (!validStack(x, y)) {
             res = 0;
-            printf("This point is not valid.\n");
+            printf("\t\t\t\tThis point is not valid.\n");
         }
         res = playerMove(p, b, x, y, i, j);
     } while (!res);

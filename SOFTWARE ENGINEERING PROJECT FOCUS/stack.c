@@ -110,4 +110,19 @@ Piece removeLast(Stack* s)
     return p;
 }
 
+char* getFirst5(Stack* s)
+{
+    char* temp = malloc(6 * sizeof(char));
+    Node* cur = s->head;
+    int i = 0;
+    while (cur != NULL && i <= 4) {
+        temp[i++] = (cur->piece== BLUE)?'B':'Y';
+        cur = cur->next;
+    }
+    temp[i] = '\0';
+    return temp;
+}
+
+
+
 

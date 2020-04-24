@@ -5,17 +5,24 @@
 #ifndef FOCUS_GAME_H
 #define FOCUS_GAME_H
 
-
 #include"stack.h"
 #define BOARDSIZE 8
 #define pNumber 2
 
+/*
+struct responsible for saving the player data
+*/
 typedef struct PlayerStruct {
     Piece playerColor;
     int reservedCount;
     int capturedCount;
+    char name[50];
 }Player;
 
+
+/*
+struct responsible for saving the board data
+*/
 typedef struct BoardStruct {
     Stack board[BOARDSIZE][BOARDSIZE];
 }Board;
@@ -34,7 +41,5 @@ Board initGame(Player p[]);
 int hasPiece(Board b, Player p);
 void doPlaceAction(Board* p, Player *a);
 void doMoveAction(Board* p, Player* a);
-
-
 
 #endif //FOCUS_GAME_H

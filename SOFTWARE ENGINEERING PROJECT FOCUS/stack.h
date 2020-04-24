@@ -5,7 +5,6 @@
 #ifndef FOCUS_STACK_H
 #define FOCUS_STACK_H
 
-#define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -31,11 +30,6 @@ void push(Stack* s, Piece p);
 Piece pop(Stack* s);
 Piece peak(Stack* s);
 Piece removeLast(Stack* s);
-
-
-
-
-
-
+char* getFirst5(Stack* s);
 
 #endif //FOCUS_STACK_H
