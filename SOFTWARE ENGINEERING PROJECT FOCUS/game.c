@@ -139,13 +139,6 @@ int isEnd(Board *b, Player p[]) {
             } else {
                 pieceCount1++;
             }
-//            if (currentColor == -1) {
-//                currentColor = peak(&b->board[i][j]);
-//            }
-//            if (peak(&b->board[i][j]) != currentColor) {
-//                // there exists two players pieces on the board
-//                return 0;
-//            }
         }
     }
     if (pieceCount0 == 0 && p[0].reservedCount == 0) {
@@ -155,15 +148,7 @@ int isEnd(Board *b, Player p[]) {
     } else {
         return -1;
     }
-    // now current color holds the winner player number
-    // and the loser would be 2-current color
 
-    //if (p[2 - currentColor].reservedCount > 0) {
-    // there exist a reserved pieces in the loser player hand.
-    //return 0;
-    //}
-
-    //return currentColor + 1;
 }
 
 // Function responsible for performing the move action from oldI, oldJ to newI ,newJ.
