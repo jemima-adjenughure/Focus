@@ -5,8 +5,7 @@
 #include"game.h"
 
 // this function creates player with the specified color
-Player createPlayer(Piece color)
-{
+Player createPlayer(Piece color) {
     Player x;
     x.playerColor = color;
     x.reservedCount = 0;
@@ -15,8 +14,7 @@ Player createPlayer(Piece color)
 }
 
 // this function creates a board according to the initial state in the document.
-Board createBoard()
-{
+Board createBoard() {
     Board temp;
     int counter = 0; // this counter is responsible for deciding which color to be set in the current board slot.
     // this counter takes 4 values 0,1,2,3 and we divide it by two so the values be 0,0,1,1. converting that to the
@@ -27,8 +25,7 @@ Board createBoard()
             if (i == 0 || i == BOARDSIZE - 1 || j == 0 || j == BOARDSIZE - 1) {
                 // should be an empty stack
                 (temp).board[i][j] = createStack();
-            }
-            else {
+            } else {
                 // should be a stack with a piece in it
                 (temp).board[i][j] = createStack();
                 push(&((temp).board[i][j]), (counter) / 2);
@@ -40,25 +37,23 @@ Board createBoard()
 }
 
 // this function returns 0 if i,j is {(0,0), (0,1), (1,0), (0,5), (0,6), (1,6), (5,0), (6,0), (6,1), (5,6), (6,5), (6,6)}
-int validStack(int i, int j)
-{
-    if (i < 0 || i >= BOARDSIZE || j<0 || j>BOARDSIZE) {
+int validStack(int i, int j) {
+    if (i < 0 || i >= BOARDSIZE || j < 0 || j > BOARDSIZE) {
         return 0;
     }
     if (i + j <= 1 || (i == 0 && j >= BOARDSIZE - 2) || (j == BOARDSIZE - 1 && i <= 1)
-        || (j == 0 && i >= BOARDSIZE - 2) || (i == BOARDSIZE - 1 && j <= 1) || (i == BOARDSIZE - 1 && j >= BOARDSIZE - 2)
+        || (j == 0 && i >= BOARDSIZE - 2) || (i == BOARDSIZE - 1 && j <= 1) ||
+        (i == BOARDSIZE - 1 && j >= BOARDSIZE - 2)
         || (j == BOARDSIZE - 1 && i >= BOARDSIZE - 2))
         return 0;
     return 1;
 }
 
 // this function print board with (- denoting invalid place, O empty space, B blue piece, Y yellow piece)
-void printBoard(Board* b)
-{
+void printBoard(Board *b) {
     printf("\t\t   ");
     // the header
-    for (int i = 0; i < BOARDSIZE; i++)
-    {
+    for (int i = 0; i < BOARDSIZE; i++) {
         printf("   %d  ", i);
     }
     printf("\n");
@@ -69,7 +64,7 @@ void printBoard(Board* b)
         //printf("%d  ", i);
         for (int k = 1; k <= 3; k++) {
             printf("\t\t");
-            if(k==2)
+            if (k == 2)
                 printf("%d  ", i);
             else
                 printf("   ");
@@ -82,29 +77,24 @@ void printBoard(Board* b)
                     if (!validStack(i, j)) {
                         if (!validStack(i, j - 1)) {
                             printf("      ");
-                        }
-                        else {
+                        } else {
                             printf("|     ");
                         }
-                    }
-                    else
+                    } else
                         printf("|     ");
 
-                }
-                else {
+                } else {
                     if (!validStack(i, j)) {
                         if (!validStack(i, j - 1))
                             printf("      ");
                         else
                             printf("|     ");
 
-                    }
-                    else if ((*b).board[i][j].size == 0) {
+                    } else if ((*b).board[i][j].size == 0) {
                         printf("|     ");
-                    }
-                    else {
+                    } else {
                         //printf("%c  ", (peak(&(*b).board[i][j]) == BLUE) ? 'B' : 'Y');
-                        char* arr = getFirst5(&(*b).board[i][j]);
+                        char *arr = getFirst5(&(*b).board[i][j]);
                         printf("|%5s", arr);
                     }
                 }
@@ -118,10 +108,9 @@ void printBoard(Board* b)
         printf("\t\t");
         printf("   ");
         for (int j = 0; j < BOARDSIZE; j++) {
-            if (validStack(i, j)|| validStack(i+1,j) ) {
+            if (validStack(i, j) || validStack(i + 1, j)) {
                 printf("______");
-            }
-            else {
+            } else {
                 printf("      ");
             }
         }
@@ -130,9 +119,10 @@ void printBoard(Board* b)
     printf("\n");
 }
 
-//return 1 if the game didn't end yet.
-int isEnd(Board* b, Player p[])
-{
+//returns 0 if player0 wins return 1 if player 1 wins and -1 otherwise.
+int isEnd(Board *b, Player p[]) {
+    int pieceCount0 = 0;
+    int pieceCount1 = 0;
     int currentColor = -1;
     for (int i = 0; i < BOARDSIZE; i++) {
         for (int j = 0; j < BOARDSIZE; j++) {
@@ -142,31 +132,43 @@ int isEnd(Board* b, Player p[])
             if (b->board[i][j].size == 0) {
                 continue;
             }
-            if (currentColor == -1) {
-                currentColor = peak(&b->board[i][j]);
+
+            currentColor = peak(&b->board[i][j]);
+            if (currentColor == BLUE) {
+                pieceCount0++;
+            } else {
+                pieceCount1++;
             }
-            if (peak(&b->board[i][j]) != currentColor) {
-                // there exists two players pieces on the board
-                return 0;
-            }
+//            if (currentColor == -1) {
+//                currentColor = peak(&b->board[i][j]);
+//            }
+//            if (peak(&b->board[i][j]) != currentColor) {
+//                // there exists two players pieces on the board
+//                return 0;
+//            }
         }
     }
-
+    if (pieceCount0 == 0 && p[0].reservedCount == 0) {
+        return 1;
+    } else if (pieceCount1 == 0 && p[1].reservedCount == 0) {
+        return 0;
+    } else {
+        return -1;
+    }
     // now current color holds the winner player number
     // and the loser would be 2-current color
 
-    if (p[2 - currentColor].reservedCount > 0) {
-        // there exist a reserved pieces in the loser player hand.
-        return 0;
-    }
+    //if (p[2 - currentColor].reservedCount > 0) {
+    // there exist a reserved pieces in the loser player hand.
+    //return 0;
+    //}
 
-    return currentColor + 1;
+    //return currentColor + 1;
 }
 
 // Function responsible for performing the move action from oldI, oldJ to newI ,newJ.
 // also this gunction checks if the points are not valid or the distance is not valid
-int playerMove(Player* p, Board* b, int oldI, int oldJ, int newI, int newJ)
-{
+int playerMove(Player *p, Board *b, int oldI, int oldJ, int newI, int newJ) {
     if (!validStack(oldI, oldJ) || !validStack(newI, newJ)) {
         printf("\t\t\t\tOne of these points is not valid.\n");
         return 0;
@@ -199,8 +201,7 @@ int playerMove(Player* p, Board* b, int oldI, int oldJ, int newI, int newJ)
 
 
 // function responsible of performing the action of placing a reserved piece in the player hand
-int playerPlace(Player* p, Board* b, int i, int j)
-{
+int playerPlace(Player *p, Board *b, int i, int j) {
     if (!validStack(i, j)) {
         printf("\t\t\t\tThis point is not valid.\n");
         return 0;
@@ -216,31 +217,27 @@ int playerPlace(Player* p, Board* b, int i, int j)
 }
 
 // check if the stack has more than  elements and pop them to the player hand
-void checkStack(Player* p, Board* b, int i, int j)
-{
+void checkStack(Player *p, Board *b, int i, int j) {
     Piece temp;
     while (b->board[i][j].size > 5) {
         temp = removeLast(&b->board[i][j]);
         if (temp == p->playerColor) {
             p->reservedCount++;
-        }
-        else {
+        } else {
             p->capturedCount++;
         }
     }
 }
 
 // initialize the game with the two players and the board
-Board initGame(Player p[])
-{
+Board initGame(Player p[]) {
     p[0] = createPlayer(BLUE);
     p[1] = createPlayer(YELLOW);
     return createBoard();
 }
 
 // check if the player has a piece of his own on the board
-int hasPiece(Board b, Player p)
-{
+int hasPiece(Board b, Player p) {
     for (int i = 0; i < BOARDSIZE; i++) {
         for (int j = 0; j < BOARDSIZE; j++) {
             if (b.board[i][j].size != 0) {
@@ -254,27 +251,25 @@ int hasPiece(Board b, Player p)
 }
 
 // prompt the user of the x,y coordinate to do the placing action mentioned earlier.
-void doPlaceAction(Board* b, Player* p)
-{
+void doPlaceAction(Board *b, Player *p) {
     int x, y;
     int res;
     do {
-        printf("\t\t\t\tPlease enter the coordinates(x y):");
+        printf("\t\t\t\tPlease enter the coordinates(y x):");
         scanf("%d %d", &x, &y);
         res = playerPlace(p, b, x, y);
     } while (!res);
 }
 
 // prompt the user of the old x,y and new x,y coordinates to do the moving action mentioned earlier.
-void doMoveAction(Board* b, Player* p)
-{
+void doMoveAction(Board *b, Player *p) {
     int x, y;
     int res;
 
     // get the starting point
     do {
         res = 1;
-        printf("\t\t\t\tPlease enter the source coordinates(x y): ");
+        printf("\t\t\t\tPlease enter the source coordinates(y x): ");
         scanf("%d %d", &x, &y);
         if (!validStack(x, y)) {
             res = 0;
@@ -297,7 +292,7 @@ void doMoveAction(Board* b, Player* p)
     int i, j;
     do {
         res = 1;
-        printf("\t\t\t\tPlease enter the destination coordinates(x y): ");
+        printf("\t\t\t\tPlease enter the destination coordinates(y x): ");
         scanf("%d %d", &i, &j);
         if (!validStack(x, y)) {
             res = 0;

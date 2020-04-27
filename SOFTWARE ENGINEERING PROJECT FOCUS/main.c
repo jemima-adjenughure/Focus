@@ -13,10 +13,10 @@ int main() {
 
     printf("Please enter the two player name (seperated by space) > ");
     scanf("%s %s",p[0].name,p[1].name);
-   // system("clear");
+    system("clear");
 
     // Start the game loop
-    while (!(winner = isEnd(&b,p))) {
+    while ((winner = isEnd(&b,p))== -1) {
         printf("\t\t\t\tDomination Board Game\n\n");
         printBoard(&b);
 
@@ -55,12 +55,12 @@ int main() {
         }
         // switch players
         i = (i+1) % 2;
-        system("cls");
+        system("clear");
     }
 
     // print the ending message
     printf("Player %d WON. with reserved pieces = %d and captured pieces = %d \n"
-            ,winner,p[winner-1].reservedCount, p[winner - 1].capturedCount);
+            ,winner,p[winner].reservedCount, p[winner].capturedCount);
     return 0;
 }
 
