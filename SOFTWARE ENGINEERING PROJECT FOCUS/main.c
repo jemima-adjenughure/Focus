@@ -13,7 +13,7 @@ int main() {
 
     printf("Please enter the two player name (seperated by space) > ");
     scanf("%s %s",p[0].name,p[1].name);
-    system("clear");
+    //system("clear");
 
     // Start the game loop
     while ((winner = isEnd(&b,p))== -1) {
@@ -55,7 +55,7 @@ int main() {
         }
         // switch players
         i = (i+1) % 2;
-        system("clear");
+        //system("clear");
     }
 
     // print the ending message
